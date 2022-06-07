@@ -75,9 +75,6 @@ class Game:
             "{}/backgroundBig.png".format(SPRITES_DIR)).convert_alpha()
         for col, tiles in enumerate(self.map_data):
             for row, tile in enumerate(tiles):
-                # if tile == "2":
-                #     self.player = Game.get_character(CHARACTERS[tile])(row, col)
-                # if tile.isnumeric() and tile != "2":
                 if tile.isnumeric():
                     self._actors.append(
                         Game.get_character(CHARACTERS[tile])(row, col))
@@ -203,21 +200,6 @@ class Game:
         Check each "Is" tile to find what rules are added and which are removed
         if any, and handle them accordingly.
         """
-
-        # TODO Task 3: Add code here to complete this method
-        # What you need to do in this method:
-        # - Get the lists of rules that need to be added to and remove from the
-        #   current list of rules. Hint: use the update() method of the Is
-        #   class.
-        # - Apply the additional and removal of the rules. When applying the
-        #   rules of a type of character, make sure all characters of that type
-        #   have their flags correctly updated. Hint: take a look at the
-        #   get_character() method -- it can be useful.
-        # - The player may change if the "isYou" rule is updated. Make sure set
-        #   self.player correctly after you update the rules. Note that
-        #   self.player could be None in some cases.
-        # - Update self._rules to the new list of rules.
-
         self._rules = self.get_rules()
         actual_if_rules = []
 
@@ -236,47 +218,30 @@ class Game:
                 actual_if_rules.append(vertical)
 
         victory_block_x, victory_block_y = 0, 0
-        # print(actual_if_rules, self._rules)
         if len(self._rules) != len(actual_if_rules):
             if len(self._rules) < len(actual_if_rules):
                 new_rules = [x for x in actual_if_rules + self._rules if x in actual_if_rules and x not in self._rules]
-                # добавляем их в общий список правил
                 self._rules.extend(new_rules)
-                # выполняем это свойство
                 for new_rule in new_rules:
                     subject = self.get_character(new_rule.split()[0])
                     attribute = new_rule.split()[1]
                     self.change_property(subject, attribute, "was set")
-                    # if attribute == "isVictory":
-                    #     victory_block_x, victory_block_y = self.change_property(subject, attribute, "was set")
-                    # else:
-                    #     self.change_property(subject, attribute, "was set")
 
             else:
-                # print("правил стало меньше")
-                # получаем удалённые правила
                 ex_rules = [x for x in actual_if_rules + self._rules if x in self._rules and x not in actual_if_rules]
                 self._rules = actual_if_rules
                 for deleted_rule in ex_rules:
                     subject = self.get_character(deleted_rule.split()[0])
                     attribute = deleted_rule.split()[1]
                     self.change_property(subject, attribute)
-                    # if attribute == "isVictory":
-                    #     victory_block_x, victory_block_y = self.change_property(subject, attribute, "was set")
-                    # else:
-                    #     self.change_property(subject, attribute, "was deleted")
-
         else:
             difference_new = [x for x in self._rules + actual_if_rules if x in actual_if_rules and x not in self._rules]
             difference_old = [x for x in self._rules + actual_if_rules if x not in actual_if_rules and x in self._rules]
             if difference_new:
                 self._rules = actual_if_rules
-                # print(difference_new, difference_old)
-                # удаление старого
                 subject = self.get_character(difference_old[0].split()[0])
                 attribute = difference_old[0].split()[1]
                 self.change_property(subject, attribute)
-                # установка нового
                 subject = self.get_character(difference_new[0].split()[0])
                 attribute = difference_new[0].split()[1]
                 self.change_property(subject, attribute, "was set")
@@ -285,7 +250,6 @@ class Game:
         """
         Takes a rule-string, split it and change the attribute of the given subject
         """
-        # print(subject, attribute, comment)
 
         all_our_subjects = [i for i in self._actors if type(i) == subject]
 
@@ -297,43 +261,31 @@ class Game:
                     only_one_subject.set_push()
 
                 if attribute == 'isStop':
-                    # only_one_subject._is_stop = True
                     only_one_subject.set_stop()
 
                 if attribute == 'isVictory':
                     only_one_subject.set_win()
-                    # only_one_subject._is_stop = False
-                    # print(only_one_subject)
-                    # print(type(only_one_subject))
-                    # print(dir(only_one_subject))
 
                 if attribute == 'isYou':
                     self.player = only_one_subject
 
                 if attribute == 'isLose':
-                    # print(only_one_subject)
                     only_one_subject.set_lose()
-                    # only_one_subject._is_stop = False
-                    # only_one_subject._is_lose = True
 
             else:
                 if attribute == 'isPush':
-                    # only_one_subject._is_push = False
                     only_one_subject.unset_push()
 
                 if attribute == 'isStop':
-                    # only_one_subject._is_stop = False
                     only_one_subject.unset_stop()
 
                 if attribute == 'isVictory':
-                    # only_one_subject._is_win = False
                     only_one_subject.unset_win()
 
                 if attribute == 'isYou':
                     only_one_subject.unset_player()
 
                 if attribute == 'isLose':
-                    # only_one_subject._is_lose = True
                     only_one_subject.unset_lose()
         else:
             for sub in all_our_subjects:
@@ -346,19 +298,11 @@ class Game:
 
                     if attribute == 'isVictory':
                         sub.set_win()
-                        # only_one_subject._is_stop = False
-                        # print(only_one_subject)
-                        # print(type(only_one_subject))
-                        # print(dir(only_one_subject))
 
                     if attribute == 'isYou':
                         self.player = sub
 
                     if attribute == 'isLose':
-                        # print(only_one_subject)
-                        # only_one_subject.set_lose()
-                        # sub._is_stop = False
-                        # sub._is_lose = True
                         sub.set_lose()
 
                 else:
@@ -399,27 +343,12 @@ class Game:
         Returns the game to a previous state based on what is at the top of the
         _history stack.
         """
-        # TODO Task 4: Implement this undo method.
-        # You'll need to restore the previous state the game using the
-        # self._history stack
-        # Find the code that pushed onto the stack to understand better what
-        # is in the stack.
-        # print(self._history._items)
         if not self._history.is_empty():
             old_game = self._history.pop()
             self.set_player(old_game.player)
-        #print(old_game)
-        # print(old_game.get_actors())
-        # res = [x for x in old_game.get_actors() if isinstance(x, self.player)]
-        # print(res)
-        # self._history.push(previous_step)
-        # self._actors = previous_step.get_actors()
             self._actors = old_game.get_actors()
-        # self._actors = res
             self._actors.append(self.player)
-        # self._running = old_game._running
             self._rules = old_game.get_rules()
-        # self.player = old_game.player
             self._is = old_game._is
 
         return
@@ -431,13 +360,6 @@ class Game:
         Return new instance of game
         """
         game_copy = Game()
-        # TODO Task 4: Complete this method to create a proper copy of the
-        #  current state of the game
-        # game_copy.player = self.player
-        # game_copy._actors = self._actors[:]
-        # # game_copy._running = self._running
-        # game_copy._is = self._is[:]
-        # game_copy._rules = self._rules[:]
         for i in self.get_actors():
             if i != self.player:
             # if act == self.player:
