@@ -65,21 +65,7 @@ class Actor:
         dx: the offset in the y coordinate
 
         Returns whether <self> actually moves.
-
-        Note: this method is different from the "player_move" method in the
-        Character class. A "player_move" is trigger by key pressed directly.
-        This more general "move" can be a move caused by a push. In fact, this
-        "move" method is used in the implementation of "player_move".
-
-        Things to think about in this method:
-        - The object cannot go off the screen boundaries
-        - The move may push other objects to move as well.
-        - The move might not happen because it's blocked by an unmovable object,
-          in which case this method should return False
-        - Recall how push works: you may push and move a line of multiple
-          objects as long as the move is not blocked by something.
         """
-        # TODO Task 2: Complete this method
         rside = game_.get_actor(self.x+1, self.y)
         lside = game_.get_actor(self.x-1, self.y)
         up = game_.get_actor(self.x, self.y-1)
@@ -384,12 +370,6 @@ class Meepo(Character):
         Overriding the same method in the base class, adding the modification
         of the image depending on the direction of the move.
         """
-        # TODO Task 2: Override this method for Meepo
-        # We want to update the image of Meepo as she moves in different
-        # directions. Check the __init__ method to see the images that are
-        # available for use.
-        # Watch the video demo carefully too see how Meepo moves. Note the
-        # movement of her "arms" and "tail".
         key_pressed = game_.keys_pressed
         dx, dy = 0, 0
         if key_pressed[pygame.K_LEFT]:
@@ -427,14 +407,6 @@ class Meepo(Character):
             dy += 1
         return (dx,dy)
 
-
-# TODO Task 1: add the Wall, Rock, and Flag classes
-# Keep the amount of code your write to a minimal for each class (it is
-# supposed to be quite short), i.e., inherit and use existing classes/methods
-# when appropriate, write ONLY what's special about the new class.
-#
-# Hint: use the load_image() function to load the image of the character
-#
 class Wall(Character):
 
     def __init__(self, x: int, y: int) -> None:
@@ -455,7 +427,7 @@ class Wall(Character):
         self.copy_flags(wcopy)
 
         return wcopy
-        # return Wall(self.x, self.y)
+
 
 class Rock(Character):
 
@@ -477,7 +449,7 @@ class Rock(Character):
         self.copy_flags(rcopy)
 
         return rcopy
-        # return Rock(self.x, self.y)
+
 
 class Flag(Character):
 
@@ -548,19 +520,11 @@ class Block(Actor):
         raise NotImplementedError
 
 
-# TODO Task 1: Implement the Subject and Attribute classes
-# Keep the amount of code your write to a minimal for each class (it is
-# supposed to be quite short), i.e., inherit and use existing classes/methods
-# when appropriate, write ONLY what's special about the new class.
-#
-# Hint: use the load_image() function to load the image of the character
-#
 class Subject(Block):
     """
     Class representing the Subject blocks in the game, e.g.,
     "Meepo", "Wall", "Flag", "Rock" (see SUBJECTS in settings.py)
     """
-    # TODO Task 1: Add the initializer and any other necessary method
     def __init__(self, x, y, word_):
         super().__init__(x,y,word_)
 
@@ -581,7 +545,6 @@ class Attribute(Block):
     Class representing the Attribute blocks in the game, e.g.,
     "Push", "Stop", "Victory", "Lose", "You"
     """
-    # TODO Task 1: Add the initializer and any other necessary method
     def __init__(self, x, y, word_):
         super().__init__(x,y,word_)
         self.image = load_image(WORDS_SPRITES[word_.lower()])
@@ -611,11 +574,6 @@ class Is(Block):
         block_is.image = self.image
         return block_is
 
-    # TODO Task 1: Add any missing methods that is necessary
-    # You may also leave this for now and revisit it when you work on Task 4
-
-    # missing method
-
     def update(self, up: Optional[Actor],
                down: Optional[Actor],
                left: Optional[Actor],
@@ -629,56 +587,10 @@ class Is(Block):
 
         Return a tuple of (horizontal, vertical) rules if a rule is detected
         in either direction, otherwise put an empty string at the tuple index.
-
-        Some example return values:
-        - ("Wall isPush", "Flag isWin)"
-        - ("", "Rock isYou")
-        - ("", "")
-
-        Also, use IS images with different colours:
-        - if no rule is detected on this IS block, use IS_PURPLE
-        - if one rule is detected on this IS block, use IS_LIGHT_BLUE
-        - if two rules are detected on this IS block, use IS_DARK_BLUE
-
-        Note: We always read the rule left-to-right or up-to-down, e.g.,
-        if it reads "Push is Wall" from left to right, or from bottom to top,
-        it is NOT a valid rule.
-
-        Hint: you may use the built-in method isinstance() to check the class
-        type of an object.
         """
         # TODO Task 3: Complete this method.
         vert = ''
         horiz = ''
-        # if left and right:
-        #     # print(right.word)
-        #     # print(list(ATTRIBUTES.values()))
-        #     # if left.word in list(SUBJECTS.values()) and right.word in \
-        #     #         list(ATTRIBUTES.values()):
-        #     self.image = load_image(IS_DARK_BLUE)
-        #     try:
-        #         horiz = left.word + ' is' + right.word
-        #     except AttributeError:
-        #         pass
-        #
-        # else:
-        #     self.image = load_image(IS_PURPLE)
-        #
-        #
-        # if up and down:
-        #     if up.word in list(SUBJECTS.values()) and down.word in \
-        #             list(ATTRIBUTES.values()):
-        #         self.image = load_image(IS_LIGHT_BLUE)
-        #     try:
-        #         vert = up.word + ' is'+ down.word
-        #     except AttributeError:
-        #         pass
-        # else:
-        #     self.image = load_image(IS_PURPLE)
-        # if horiz:
-        #     print(horiz)
-        # if vert:
-        #     print(vert)
         flag = 0
         if left and right and type(left) != Bush and type(right)!= Bush:
             try:
