@@ -7,10 +7,6 @@ class Stack:
     Stores data in a last-in, first-out order. When removing an item from the
     stack, the most recently-added item is the one that is removed.
     """
-    # === Private Attributes ===
-    # _items:
-    #     The items stored in this stack. The end of the list represents
-    #     the top of the stack.
     _items: List
 
     def __init__(self) -> None:
@@ -19,13 +15,6 @@ class Stack:
 
     def is_empty(self) -> bool:
         """Return whether this stack contains no items.
-
-        >>> s = Stack()
-        >>> s.is_empty()
-        True
-        >>> s.push('hello')
-        >>> s.is_empty()
-        False
         """
         return self._items == []
 
@@ -37,12 +26,6 @@ class Stack:
         """Remove and return the element at the top of this stack.
 
         Raise an EmptyStackError if this stack is empty.
-
-        >>> s = Stack()
-        >>> s.push('hello')
-        >>> s.push('goodbye')
-        >>> s.pop()
-        'goodbye'
         """
         if self.is_empty():
             raise EmptyStackError
