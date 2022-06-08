@@ -8,6 +8,8 @@ import actor
 class Game:
     """
     Class representing the game.
+    
+    In order to run the game, this file has to be compiled.
     """
     size: Tuple[int, int]
     width: int
